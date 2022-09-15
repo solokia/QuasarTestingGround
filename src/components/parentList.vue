@@ -1,20 +1,20 @@
 <template>
   <div>
     <p>{{ title }}</p>
-    <ul>
-      <li v-for="(item,index) in items" :key="item.id" >
+    <ul >
+      <li v-for='(item,index) in items' :key='index' >
         {{ item.id }} - {{ item.d }}-{{index}}
-        <TxtBoxComponent :txt="item.d" @updateTxt="(text)=>{modRepl(item,text)}"></TxtBoxComponent>
+        <ParentItem :parentItem='item'></ParentItem>
         <!-- <q-input
-    :model-value="item.d"
-    @update:model-value="
+    :model-value='item.d'
+    @update:model-value='
       (val) => {
         item.d=val
         modRepl(item,val)
       }
-    "
+    '
   ></q-input> -->
-        <q-button @click="addi">click</q-button>
+        <!-- <q-btn @click='addi'>click</q-btn> -->
       </li>
     </ul>
     <p>Count: {{ todoCount }} / {{ meta.totalCount }}</p>
@@ -23,16 +23,15 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType, computed, ref, toRef,Ref,  onMounted } from 'vue';
+<script lang='ts'>
+import { defineComponent, PropType, computed, ref, toRef,Ref,  onMounted, watch } from 'vue';
 import { Todo, Meta } from './models';
 // import {store} from 'src/controls/store';
 // import {controller} from '../controls/control';
 import {plane}  from '../controls/control';
 // import controller from '../controls/store';
-import { parentstruct, testStruct } from '../controls/types';
-import TxtBoxComponent from './textboxComponent.vue'
-
+import { parentStruct, testStruct } from '../controls/types';
+import ParentItem from './parentItem.vue'
 function useClickCount() {
   const clickCount = ref(0);
   function increment() {
@@ -51,7 +50,7 @@ function useDisplayTodo(todos: Ref<Todo[]>) {
 export default defineComponent({
   name: 'CompositionComponent',
   components:{
-    TxtBoxComponent,
+    ParentItem,
 },
   props: {
     title: {
@@ -71,17 +70,17 @@ export default defineComponent({
     },
   },
   setup(props) {
-    let items =ref(Array<parentstruct>());
+    let items =ref(Array<parentStruct>());
     // let items = ref(tems)
     let aid:Ref<number>=ref(0)
-    const {store,load,controller}=plane()
+    const {load,controller}=plane()
     const {add,getList,modD,modReplace,del}=controller()
     const addi=(test:string)=>{
       const e:testStruct={
         tid: 0,
         b: test
       }
-      const p:parentstruct= {
+      const p:parentStruct= {
         id:items.value.length,
         d: test,
         e: e,
@@ -89,21 +88,31 @@ export default defineComponent({
       }
       add(p)
     }
-    const modDelete = (parent:parentstruct)=>{
+    const modDelete = (parent:parentStruct)=>{
       modD(parent)
     }
-    const modRepl = (parent:parentstruct,txt:string)=>{
+    const modRepl = (parent:parentStruct,txt:string)=>{
+      const idx =items.value.findIndex((item)=>{return item.id==parent.id})
+      const item=items.value[idx]
+      console.log(`modRepl composition component localstore item : ${item.d}`)
       console.log(`modRepl event return: ${txt}`)
       
       console.log(parent)
       modReplace(parent,txt)
+      console.log(`modRepl after composition component item : ${item.d}`)
+
     }
 
     onMounted(()=>{
+      console.log("parent list on mounted")
       load()
       items.value = getList(aid.value)??[]
       console.log(items)
     })
+
+    watch(items,()=>{
+      console.log('items change in watch')
+    },{ deep : true})
         
     return { ...useClickCount(), ...useDisplayTodo(toRef(props, 'todos')),addi,modDelete,modRepl,del,items};
 

@@ -1,22 +1,22 @@
 <template>
   <q-input
-    :model-value="txt"
-    @update:model-value="
+    :model-value='txt.d'
+    @update:model-value='
       (val) => {
         modify(val);
       }
-    "
+    '
   ></q-input>
 </template>
   
-  <script lang="ts">
-import { defineComponent, ref } from 'vue';
-
+  <script lang='ts'>
+import { defineComponent, PropType } from 'vue';
+import { parentStruct  } from '../controls/types';
 export default defineComponent({
   name: 'TxtBoxComponent',
   props: {
     txt: {
-      type: String,
+      type: Object as PropType<parentStruct>,
       required: true,
     },
   },
@@ -27,11 +27,11 @@ export default defineComponent({
 
     const modify = (eventparam: string) => {
       console.log('modify func');
-      console.log(`before update t : ${eventparam} , propstxt:${props.txt}`);
+      console.log(`before update eventParam : ${eventparam} , propstxt:${props.txt.d}`);
     //   text.value = eventparam;
 
-      console.log(`aft update t : ${eventparam} , propstxt:${props.txt}`);
-      emit('updateTxt', props.txt);
+      console.log(`aft update eventParam : ${eventparam} , propstxt:${props.txt.d}`);
+      emit('updateTxt', eventparam);
     };
 
     return { modify };

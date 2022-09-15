@@ -1,11 +1,11 @@
 
-import {store}  from "./store"
-import { parentstruct,testStruct } from "./types"
+import {store}  from './store'
+import { parentStruct,testStruct } from './types'
 
 
 const controller = ()=>{
     // const {store}=storage()
-    const add=(parent:parentstruct) =>{
+    const add=(parent:parentStruct) =>{
         const items= store.get(parent.aid.toString())
         items?.push(parent)
     }
@@ -16,14 +16,14 @@ const controller = ()=>{
             items.splice(idx,1)
         }
     }
-    const modD = (parent:parentstruct)=>{
+    const modD = (parent:parentStruct)=>{
         const items= store.get(parent.aid.toString())
         if(items){
             const idx =items.findIndex((item)=>{return item.id==parent.id})
             items[idx].d=parent.d
         }
     }
-    const modReplace = (parent:parentstruct,txt:string)=>{
+    const modReplace = (parent:parentStruct,txt:string)=>{
         
         const items= store.get(parent.aid.toString())
         
@@ -31,13 +31,15 @@ const controller = ()=>{
             
             const idx =items.findIndex((item)=>{return item.id==parent.id})
             console.log(`before mod ${items[idx].d}`)
-            console.log(items[idx].d.length)
-            if(items[idx].d.length<9)
-                parent.d = txt
-            else
-                items[idx].d = 'invalid'
-            console.log(`after mod ${items[idx].d}`)
+            // const newParent= {...items[idx]}
+            // console.log(items[idx].d.length)
+            // if(items[idx].d.length<9)
+            parent.d = txt
+            // else
+            //     items[idx].d = 'invalid'
+            
             items[idx]=parent
+            console.log(`after mod ${items[idx].d}`)
         }
     }
     const getList = (aid:number) => {
@@ -54,7 +56,7 @@ const controller = ()=>{
 
 export const load= ()=>{
     // const {store} = storage()
-    let arr: parentstruct[]
+    let arr: parentStruct[]
     for(let i = 0 ; i<3;i++){
         arr=[]
         for(let x = 0; x<100;x++){
@@ -62,7 +64,7 @@ export const load= ()=>{
                 tid: x+i,
                 b: `${x}`
             }
-            const newItem:parentstruct = {
+            const newItem:parentStruct = {
                 id: x,
                 d: `item ${x}`,
                 e: test,
@@ -70,7 +72,7 @@ export const load= ()=>{
             }
             arr.push(newItem)
         }
-        console.log("test")
+        console.log('test')
         // store.set(`${i}`,arr)
         store.set(`${i}`,arr)
     }

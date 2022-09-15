@@ -4,7 +4,7 @@ export interface testStruct {
     b:string
 }
 
-export interface parentstruct {
+export interface parentStruct {
     id:number
     d:string
     e:testStruct
