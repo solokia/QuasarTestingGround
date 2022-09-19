@@ -5,6 +5,7 @@
       active
       :todos='todos'
       :meta='meta'
+      :aid=0
     ></example-component>
   </q-page>
 </template>

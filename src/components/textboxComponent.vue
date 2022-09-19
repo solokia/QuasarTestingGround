@@ -31,6 +31,7 @@ export default defineComponent({
     //   text.value = eventparam;
 
       console.log(`aft update eventParam : ${eventparam} , propstxt:${props.txt.d}`);
+      if(eventparam.length<9) // self validation. ui resets to props after user unfocus.
       emit('updateTxt', eventparam);
     };
 
