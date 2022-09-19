@@ -46,7 +46,7 @@ export default defineComponent({
     TxtBoxComponent,
   },
   setup(props) {
-    let localPropItem = reactive(props.parentItem);
+    let localPropItem = reactive(props.parentItem); // This doesn't rebuild if we mod the item in control that affects this not through emit.
     let aid: Ref<number> = ref(0);
     const { load, controller } = plane();
     const { add, modD, modReplace, del } = controller();
